@@ -1,12 +1,12 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
-using log4net;
+﻿using log4net;
 using log4net.Config;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.IO;
+using System.Reflection;
 using Test_Taste_Console_Application.Constants;
-using Test_Taste_Console_Application.Domain.Services;
-using Test_Taste_Console_Application.Domain.Services.Interfaces;
+using Test_Taste_Console_Application.Domain.BusinessServices;
+using Test_Taste_Console_Application.Domain.BusinessServices.Interfaces;
 using Test_Taste_Console_Application.Utilities;
 
 namespace Test_Taste_Console_Application
@@ -55,11 +55,9 @@ namespace Test_Taste_Console_Application
             //The function configures all the services.
             XmlConfigurator.Configure(LogManager.GetRepository(Assembly.GetEntryAssembly()),
                 new FileInfo(ConfigurationFileName.Logger));
-            serviceCollection.AddHttpClient<HttpClientService>();
-            serviceCollection.AddMemoryCache();
-            serviceCollection.AddSingleton<IPlanetService, PlanetService>();
+
             serviceCollection.AddSingleton<IOutputService, ScreenOutputService>();
-            serviceCollection.AddSingleton<IMoonService, MoonService>();
+            IocConfig.RegisterServices(serviceCollection);
         }
     }
 }
