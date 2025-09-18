@@ -36,7 +36,8 @@ namespace Test_Taste_Console_Application
                 screenOutputService.OutputAllMoonsAndTheirMassToConsole();
                 screenOutputService.OutputAllPlanetsAndTheirMoonsToConsole();
 
-               
+                screenOutputService.OutputPlanetsWithMoonAndTheirAverageTempratureToConsole();
+
             }
             catch (Exception exception)
             {
@@ -55,6 +56,7 @@ namespace Test_Taste_Console_Application
             XmlConfigurator.Configure(LogManager.GetRepository(Assembly.GetEntryAssembly()),
                 new FileInfo(ConfigurationFileName.Logger));
             serviceCollection.AddHttpClient<HttpClientService>();
+            serviceCollection.AddMemoryCache();
             serviceCollection.AddSingleton<IPlanetService, PlanetService>();
             serviceCollection.AddSingleton<IOutputService, ScreenOutputService>();
             serviceCollection.AddSingleton<IMoonService, MoonService>();

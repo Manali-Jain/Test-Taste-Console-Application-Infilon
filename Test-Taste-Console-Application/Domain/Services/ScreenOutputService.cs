@@ -23,6 +23,7 @@ namespace Test_Taste_Console_Application.Domain.Services
         public void OutputAllPlanetsAndTheirMoonsToConsole()
         {
             //The service gets all the planets from the API.
+            Console.WriteLine(" 1 : Loading data...");
             var planets = _planetService.GetAllPlanets().ToArray();
 
             //If the planets aren't found, then the function stops and tells that to the user via the console.
@@ -36,6 +37,7 @@ namespace Test_Taste_Console_Application.Domain.Services
 
             //The column sizes and labels for the planets are configured here. 
             var columnSizesForPlanets = new[] { 20, 20, 30, 20 };
+            Console.WriteLine(" 2 : Writing data...");
             Console.WriteLine("********OutputAllPlanetsAndTheirMoonsToConsole********");
             var columnLabelsForPlanets = new[]
             {
@@ -88,6 +90,7 @@ namespace Test_Taste_Console_Application.Domain.Services
                 //Under the data the footer is created.
                 ConsoleWriter.CreateLine(columnSizesForMoons);
                 ConsoleWriter.CreateEmptyLines(2);
+                Console.WriteLine(" 3 : Data Loaded");
                 Console.WriteLine("****************************************************************");
                 /*
                     This is an example of the output for the planet Earth:
@@ -105,6 +108,7 @@ namespace Test_Taste_Console_Application.Domain.Services
         public void OutputAllMoonsAndTheirMassToConsole()
         {
             //The function works the same way as the PrintAllPlanetsAndTheirMoonsToConsole function. You can find more comments there.
+            Console.WriteLine(" 1 : Loading data...");
             var moons = _moonService.GetAllMoons().ToArray();
             
             if (!moons.Any())
@@ -121,6 +125,7 @@ namespace Test_Taste_Console_Application.Domain.Services
                 OutputString.MoonNumber, OutputString.MoonId, OutputString.MoonMassExponent, OutputString.MoonMassValue
             };
 
+            Console.WriteLine(" 2 : Writing data...");
             Console.WriteLine("********OutputAllMoonsAndTheirMassToConsole********");
             ConsoleWriter.CreateHeader(columnLabelsForMoons, columnSizesForMoons);
 
@@ -137,6 +142,7 @@ namespace Test_Taste_Console_Application.Domain.Services
 
             ConsoleWriter.CreateLine(columnSizesForMoons);
             ConsoleWriter.CreateEmptyLines(2);
+            Console.WriteLine(" 3 : Data Loaded");
             Console.WriteLine("****************************************************************");
             /*
                 This is an example of the output for the moon around the earth:
@@ -152,6 +158,7 @@ namespace Test_Taste_Console_Application.Domain.Services
         public void OutputAllPlanetsAndTheirAverageMoonGravityToConsole()
         {
             //The function works the same way as the PrintAllPlanetsAndTheirMoonsToConsole function. You can find more comments there.
+            Console.WriteLine(" 1 : Loading data...");
             var planets = _planetService.GetAllPlanets().ToArray();
             if (!planets.Any())
             {
@@ -167,6 +174,7 @@ namespace Test_Taste_Console_Application.Domain.Services
                 OutputString.PlanetId, OutputString.PlanetMoonAverageGravity
             };
 
+            Console.WriteLine(" 2 : Writing data...");
             Console.WriteLine("********OutputAllPlanetsAndTheirAverageMoonGravityToConsole********");
             ConsoleWriter.CreateHeader(columnLabels, columnSizes);
 
@@ -184,6 +192,7 @@ namespace Test_Taste_Console_Application.Domain.Services
 
             ConsoleWriter.CreateLine(columnSizes);
             ConsoleWriter.CreateEmptyLines(2);
+            Console.WriteLine(" 3 : Data Loaded");
             Console.WriteLine("****************************************************************");
             /*
                 --------------------+--------------------------------------------------
@@ -192,6 +201,68 @@ namespace Test_Taste_Console_Application.Domain.Services
                 1                   |0.0f
                 --------------------+--------------------------------------------------
             */
+        }
+
+        public void OutputPlanetsWithMoonAndTheirAverageTempratureToConsole()
+        {
+            Console.WriteLine(" 1 : Loading data...");
+            var planets = _planetService.GetAllPlanets().ToArray();
+            if (!planets.Any())
+            {
+                Console.WriteLine("********OutputPlanetsWithMoonAndTheirAverageTempratureToConsole********");
+                Console.WriteLine(OutputString.NoMoonsFound);
+                Console.WriteLine("****************************************************************");
+                return;
+            }
+
+            Console.WriteLine(" 2 : Writing data...");
+            Console.WriteLine("********OutputPlanetsWithMoonAndTheirAverageTempratureToConsole********");            
+            
+
+            for (int i = 0; i < planets.Length; i++)
+            {
+                // if the planet has moon then we are processing further
+                if (planets[i].HasMoons())
+                {
+                    var columnSizes = new[] { 20, 30 };
+                    var columnLabels = new[]
+                    {
+                        OutputString.PlanetId, OutputString.PlanetMoonAverageTemprature
+                    };
+                    
+                    //diplay planet details with planet's moon avg temp of 
+                    ConsoleWriter.CreateHeader(columnLabels, columnSizes);
+                    ConsoleWriter.CreateText(new string[] { $"{planets[i].Id}", $"{planets[i].avgTemp}" }, columnSizes);
+
+                    //display moon details
+                    var columnSizesForMoons = new[] { 20, 70 + 2 };
+                    var columnLabelsForMoons = new[]
+                    {
+                        OutputString.MoonNumber, OutputString.MoonId
+                    };
+
+                    ConsoleWriter.CreateHeader(columnLabelsForMoons, columnSizesForMoons);
+
+
+                    //Loop for writing the Moon data
+                    for (int k = 0, l = 1; k < planets[i].Moons.Count; k++, l++)
+                    {
+                        ConsoleWriter.CreateText(
+                            new[]
+                            {
+                            l.ToString(), CultureInfoUtility.TextInfo.ToTitleCase(planets[i].Moons.ElementAt(k).Id)
+                            },
+                            columnSizesForMoons);
+                    }
+
+                    //Write Footer when one planet data is loaded
+                    ConsoleWriter.CreateLine(columnSizesForMoons);
+                    ConsoleWriter.CreateEmptyLines(2);
+                }
+            }
+            Console.WriteLine(" 3 : Data Loaded");
+
+            Console.WriteLine("****************************************************************");
         }
 
     }

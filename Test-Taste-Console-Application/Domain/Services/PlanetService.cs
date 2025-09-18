@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
-using Newtonsoft.Json;
 using Test_Taste_Console_Application.Constants;
 using Test_Taste_Console_Application.Domain.DataTransferObjects;
 using Test_Taste_Console_Application.Domain.DataTransferObjects.JsonObjects;
@@ -16,15 +18,25 @@ namespace Test_Taste_Console_Application.Domain.Services
     public class PlanetService : IPlanetService
     {
         private readonly HttpClientService _httpClientService;
+        private readonly IMemoryCache _cache;
 
-        public PlanetService(HttpClientService httpClientService)
+        public PlanetService(HttpClientService httpClientService, IMemoryCache cache)
         {
             _httpClientService = httpClientService;
+            _cache = cache;
         }
 
         public IEnumerable<Planet> GetAllPlanets()
         {
             var allPlanetsWithTheirMoons = new Collection<Planet>();
+            const string cacheKey = "AllPlanets";
+
+            //check cache have value then return data , no need to call API again
+            if (_cache.TryGetValue(cacheKey, out IEnumerable<Planet> cachedPlanetData))
+            {
+                return cachedPlanetData;
+            }
+
 
             var response = _httpClientService.Client
                 .GetAsync(UriPath.GetAllPlanetsWithMoonsQueryParameters)
@@ -63,6 +75,9 @@ namespace Test_Taste_Console_Application.Domain.Services
 
                 }
                 allPlanetsWithTheirMoons.Add(new Planet(planet));
+
+                //All planet data is cached for 15 minute
+                _cache.Set(cacheKey, allPlanetsWithTheirMoons, TimeSpan.FromMinutes(15));
             }
 
             return allPlanetsWithTheirMoons;

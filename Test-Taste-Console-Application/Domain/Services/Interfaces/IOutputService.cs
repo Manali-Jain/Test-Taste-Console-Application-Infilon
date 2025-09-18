@@ -8,5 +8,8 @@
         void OutputAllPlanetsAndTheirMoonsToConsole();
         void OutputAllMoonsAndTheirMassToConsole();
         void OutputAllPlanetsAndTheirAverageMoonGravityToConsole();
+
+       // New method to fetch Planets with moon and avg temprature
+        void OutputPlanetsWithMoonAndTheirAverageTempratureToConsole();
     }
 }

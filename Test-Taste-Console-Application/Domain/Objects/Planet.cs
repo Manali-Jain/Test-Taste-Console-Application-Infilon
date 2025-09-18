@@ -15,6 +15,9 @@ namespace Test_Taste_Console_Application.Domain.Objects
             get => 0.0f;
         }
 
+        //Avg temp property get, set
+        public float avgTemp { get; set; }  
+
         public Planet(PlanetDto planetDto)
         {
             Id = planetDto.Id;
