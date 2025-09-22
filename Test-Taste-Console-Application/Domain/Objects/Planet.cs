@@ -22,6 +22,7 @@ namespace Test_Taste_Console_Application.Domain.Objects
         {
             Id = planetDto.Id;
             SemiMajorAxis = planetDto.SemiMajorAxis;
+            AvgTemp = planetDto.AvgTemp;
             Moons = new Collection<Moon>();
             if(planetDto.Moons != null)
             {
